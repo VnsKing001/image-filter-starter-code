@@ -29,6 +29,19 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   /**************************************************************************** */
 
+  app.get("/filteredimage", async (req: express.Request, res: express.Response) => {
+    let imageUrl = req.query.image_url;
+    if (imageUrl) {
+      filterImageFromURL(imageUrl).then(response => {
+        res.status(200).sendFile(response);
+        res.on("finish", () => {
+          deleteLocalFiles([response]);
+        });
+      }).catch(err => {
+        res.status(400).send("error to call api: " + err,);
+      })
+    }
+  })
   //! END @TODO1
   
   // Root Endpoint
